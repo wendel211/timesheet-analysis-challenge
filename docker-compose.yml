@@ -1,0 +1,6 @@
+services:
+  timesheet-analysis:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app
