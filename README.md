@@ -1,21 +1,21 @@
 # Timesheet Analysis Challenge
 
-Solucao containerizada em Python para processar registros de timesheet a partir de `data.json` e gerar um resumo analitico deterministico em `result.json`.
+Solução containerizada em Python para processar registros de timesheet a partir de `data.json` e gerar um resumo analítico determinístico em `result.json`.
 
-O projeto foi desenvolvido para o desafio tecnico, com foco em manipulacao de dados, regras de negocio, tratamento de entradas invalidas, ordenacao deterministica e execucao via Docker.
+O projeto foi desenvolvido para o desafio técnico, com foco em manipulação de dados, regras de negócio, tratamento de entradas inválidas, ordenação determinística e execução via Docker.
 
-## Sumario
+## Sumário
 
-- [Execucao com Docker](#execucao-com-docker)
+- [Execução com Docker](#execucao-com-docker)
 - [Resultado gerado](#resultado-gerado)
-- [Validacao local](#validacao-local)
+- [Validação local](#validacao-local)
 - [Regras implementadas](#regras-implementadas)
-- [Ordenacao deterministica](#ordenacao-deterministica)
+- [Ordenação determinística](#ordenacao-deterministica)
 - [Estrutura do projeto](#estrutura-do-projeto)
-- [Decisoes tecnicas](#decisoes-tecnicas)
+- [Decisões técnicas](#decisoes-tecnicas)
 - [Tratamento de erros](#tratamento-de-erros)
 
-## Execucao com Docker
+## Execução com Docker
 
 Com Docker e Docker Compose instalados, execute na raiz do projeto:
 
@@ -23,17 +23,17 @@ Com Docker e Docker Compose instalados, execute na raiz do projeto:
 docker compose up --build
 ```
 
-Ao final da execucao, a aplicacao cria o arquivo:
+Ao final da execução, a aplicação cria o arquivo:
 
 ```text
 result.json
 ```
 
-Esse arquivo e gerado localmente na raiz do projeto por meio do volume configurado no `docker-compose.yml`.
+Esse arquivo é gerado localmente na raiz do projeto por meio do volume configurado no `docker-compose.yml`.
 
 ## Resultado gerado
 
-A saida segue a estrutura solicitada no desafio:
+A saída segue a estrutura solicitada no desafio:
 
 ```json
 {
@@ -49,23 +49,23 @@ A saida segue a estrutura solicitada no desafio:
 
 Campos principais:
 
-- `totalMinutes`: soma total de minutos considerando apenas registros validos.
+- `totalMinutes`: soma total de minutos considerando apenas registros válidos.
 - `tasks`: lista de tarefas agrupadas por `taskId`, com total de minutos e percentual.
 - `mostWorkedTask`: tarefa com maior total de minutos.
-- `top3TasksPercentage`: tres tarefas com maior volume de minutos e seus percentuais.
-- `top3Employees`: tres usuarios com maior total de minutos trabalhados.
-- `mostDistinctUserOnTasks`: usuario que trabalhou na maior quantidade de tarefas distintas.
+- `top3TasksPercentage`: três tarefas com maior volume de minutos e seus percentuais.
+- `top3Employees`: três usuários com maior total de minutos trabalhados.
+- `mostDistinctUserOnTasks`: usuário que trabalhou na maior quantidade de tarefas distintas.
 - `ignoredRecords`: quantidade de registros ignorados por terem `minutes <= 0`.
 
-## Validacao local
+## Validação local
 
-Executar a aplicacao sem Docker:
+Executar a aplicação sem Docker:
 
 ```bash
 python src/main.py
 ```
 
-Rodar a suite de testes:
+Rodar a suíte de testes:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -77,7 +77,7 @@ Comparar `result.json` com o gabarito `output.json`:
 python -c "import json; print(json.load(open('result.json', encoding='utf-8')) == json.load(open('output.json', encoding='utf-8')))"
 ```
 
-O resultado esperado da comparacao e:
+O resultado esperado da comparação é:
 
 ```text
 True
@@ -85,10 +85,10 @@ True
 
 ## Regras implementadas
 
-A aplicacao:
+A aplicação:
 
-- Le o arquivo local `data.json`.
-- Valida se o input principal e uma lista de registros.
+- Lê o arquivo local `data.json`.
+- Valida se o input principal é uma lista de registros.
 - Ignora registros com `minutes <= 0`.
 - Conta os registros ignorados em `ignoredRecords`.
 - Agrupa tarefas por `taskId`.
@@ -97,27 +97,27 @@ A aplicacao:
 - Formata percentuais com duas casas decimais e sufixo `%`.
 - Identifica a tarefa mais trabalhada.
 - Retorna o top 3 de tarefas.
-- Agrupa usuarios por `userId`.
-- Soma o total de minutos por usuario.
-- Retorna o top 3 de funcionarios.
-- Identifica o usuario com mais tarefas distintas.
-- Ordena `taskIds` do usuario com mais tarefas distintas em ordem crescente.
+- Agrupa usuários por `userId`.
+- Soma o total de minutos por usuário.
+- Retorna o top 3 de funcionários.
+- Identifica o usuário com mais tarefas distintas.
+- Ordena `taskIds` do usuário com mais tarefas distintas em ordem crescente.
 
-## Ordenacao deterministica
+## Ordenação determinística
 
-Para garantir que a saida seja sempre reproduzivel, as ordenacoes seguem exatamente as regras do desafio:
+Para garantir que a saída seja sempre reproduzível, as ordenações seguem exatamente as regras do desafio:
 
 Tarefas:
 
 1. `totalMinutes` em ordem decrescente.
 2. `taskId` em ordem crescente em caso de empate.
 
-Funcionarios:
+Funcionários:
 
 1. `totalMinutes` em ordem decrescente.
 2. `userId` em ordem crescente em caso de empate.
 
-Usuario com mais tarefas distintas:
+Usuário com mais tarefas distintas:
 
 1. `distinctTasks` em ordem decrescente.
 2. `userId` em ordem crescente em caso de empate.
@@ -144,58 +144,58 @@ Usuario com mais tarefas distintas:
 
 Responsabilidades:
 
-- `src/main.py`: ponto de entrada da aplicacao.
-- `src/timesheet_analysis.py`: regras de negocio, validacao, agregacoes e escrita do resultado.
-- `tests/test_timesheet_analysis.py`: testes automatizados das regras principais e comparacao com o gabarito.
+- `src/main.py`: ponto de entrada da aplicação.
+- `src/timesheet_analysis.py`: regras de negócio, validação, agregações e escrita do resultado.
+- `tests/test_timesheet_analysis.py`: testes automatizados das regras principais e comparação com o gabarito.
 - `data.json`: dataset de entrada.
-- `output.json`: gabarito usado somente para validacao.
+- `output.json`: gabarito usado somente para validação.
 - `result.json`: artefato gerado em runtime e ignorado pelo Git.
 
-## Decisoes tecnicas
+## Decisões técnicas
 
-- Python puro com biblioteca padrao.
-- Sem dependencias externas.
+- Python puro com biblioteca padrão.
+- Sem dependências externas.
 - Sem banco de dados.
-- Sem chamadas HTTP ou acesso a rede.
-- Execucao principal via Docker Compose.
-- Logica de negocio separada do ponto de entrada para facilitar teste e manutencao.
-- Saida JSON com campos em ordem estavel.
-- `output.json` nao e usado pela aplicacao, apenas pelos testes.
-- `result.json` nao e versionado, pois deve ser produzido ao executar o projeto.
+- Sem chamadas HTTP ou acesso à rede.
+- Execução principal via Docker Compose.
+- Lógica de negócio separada do ponto de entrada para facilitar teste e manutenção.
+- Saída JSON com campos em ordem estável.
+- `output.json` não é usado pela aplicação, apenas pelos testes.
+- `result.json` não é versionado, pois deve ser produzido ao executar o projeto.
 
 ## Tratamento de erros
 
-A aplicacao falha com mensagem clara quando:
+A aplicação falha com mensagem clara quando:
 
-- `data.json` nao existe.
-- `data.json` nao contem JSON valido.
-- O conteudo principal nao e uma lista.
-- Um registro valido nao possui campos obrigatorios.
-- Campos numericos essenciais, como `minutes`, `userId` ou `taskId`, possuem tipos invalidos.
+- `data.json` não existe.
+- `data.json` não contém JSON válido.
+- O conteúdo principal não é uma lista.
+- Um registro válido não possui campos obrigatórios.
+- Campos numéricos essenciais, como `minutes`, `userId` ou `taskId`, possuem tipos inválidos.
 
-Registros com `minutes <= 0` nao sao tratados como erro, pois a regra do desafio determina que eles devem ser ignorados e contabilizados.
+Registros com `minutes <= 0` não são tratados como erro, pois a regra do desafio determina que eles devem ser ignorados e contabilizados.
 
 ## Complexidade
 
-Considerando `n` registros validos, `t` tarefas distintas e `u` usuarios distintos:
+Considerando `n` registros válidos, `t` tarefas distintas e `u` usuários distintos:
 
 - Processamento dos registros: `O(n)`.
-- Ordenacao de tarefas: `O(t log t)`.
-- Ordenacao de usuarios: `O(u log u)`.
-- Uso de memoria: `O(t + u)`.
+- Ordenação de tarefas: `O(t log t)`.
+- Ordenação de usuários: `O(u log u)`.
+- Uso de memória: `O(t + u)`.
 
-## Checklist rapido
+## Checklist rápido
 
 - [x] Leitura local de `data.json`.
-- [x] Geracao de `result.json`.
+- [x] Geração de `result.json`.
 - [x] Ignora `minutes <= 0`.
 - [x] Contabiliza `ignoredRecords`.
 - [x] Calcula totais por tarefa.
 - [x] Calcula percentuais com duas casas.
 - [x] Retorna top 3 tarefas.
-- [x] Retorna top 3 funcionarios.
-- [x] Identifica usuario com mais tarefas distintas.
-- [x] Aplica criterios de desempate.
+- [x] Retorna top 3 funcionários.
+- [x] Identifica usuário com mais tarefas distintas.
+- [x] Aplica critérios de desempate.
 - [x] Executa com `docker compose up --build`.
 - [x] Inclui testes automatizados.
 - [x] Compara resultado com `output.json`.
